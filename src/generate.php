@@ -13,7 +13,7 @@ use PhpParser\NodeVisitor\FindingVisitor;
 use PhpParser\ParserFactory;
 use PhpParser\PrettyPrinter\Standard;
 
-require_once file_exists( 'vendor/autoload.php' ) ? 'vendor/autoload.php' : dirname( __DIR__, 4 ) . '/vendor/autoload.php';
+require_once file_exists( dirname( __DIR__, 4 ) . '/vendor/autoload.php' ) ? dirname( __DIR__, 4 ) . '/vendor/autoload.php' : 'vendor/autoload.php';
 
 $options = getopt( '', [
 	"input:",
@@ -249,6 +249,7 @@ function hooks_parse_files( array $files, string $root, array $ignore_hooks ) : 
 			}
 
 			$docblock = $expr->getDocComment();
+			$line     = $expr->getLine();
 
 			if ( $docblock && str_starts_with($docblock->getText(), '/** This action is documented in') ) {
 				continue;
@@ -426,6 +427,9 @@ function hooks_parse_files( array $files, string $root, array $ignore_hooks ) : 
 			}
 
 			$out['file'] = str_replace( "{$root}/", '', $filename );
+
+			// Add the line number to the output.
+			$out['line'] = $line;
 
 			switch ( $funcNameStr ) {
 				case 'do_action':
