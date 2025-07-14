@@ -379,6 +379,14 @@ function hooks_parse_files( array $files, string $root, array $ignore_hooks ) : 
 						'Hook "%s" contains a `@return` tag, which is not supported.' . "\n",
 						$hook_name,
 					);
+				} elseif ( $tag instanceof \phpDocumentor\Reflection\DocBlock\Tags\InvalidTag ) {
+					printf(
+						'Unknown tag type "%s" (@%s) for hook "%s" in file "%s".',
+						get_class( $tag ),
+						$tag->getName(),
+						$hook_name,
+						$filename,
+					);
 				} else {
 					throw new \Exception(
 						sprintf(
